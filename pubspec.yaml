@@ -60,6 +60,10 @@ flutter:
   assets:
     - material/file.flr
     - material/ware.flr
+    - material/Open.flr
+    - material/Trim.flr
+    - material/ending.flr
+    - material/downloading.flr
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -30,18 +30,33 @@ class HomeView extends GetView<HomeController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      controller.openController.click();
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      child: FlareActor(
+                        'material/Open.flr',
+                        color: Colors.blue,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.center,
+                        controller: controller.openController
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: Container(
-                        margin: EdgeInsets.only(left: 10),
                         child: TextField(
-                          textInputAction: TextInputAction.go,
-                          controller: controller.commandCtr,
-                          onSubmitted: (value){
-                            controller.xuLyText(controller.commandCtr.text);
-                            controller.commandCtr.text = '';
-                          },
-                          style: GoogleFonts.roboto(fontSize: 14),
-                        )),
+                      textInputAction: TextInputAction.go,
+                      controller: controller.commandCtr,
+                      onSubmitted: (value) {
+                        controller.xuLyText(controller.commandCtr.text);
+                        controller.commandCtr.text = '';
+                      },
+                      style: GoogleFonts.roboto(fontSize: 14),
+                    )),
                   ),
                   FlatButton(
                     color: Colors.grey,
@@ -56,6 +71,7 @@ class HomeView extends GetView<HomeController> {
                     onPressed: () {
                       controller.xuLyText(controller.commandCtr.text);
                       controller.commandCtr.text = '';
+                      FocusScope.of(context).requestFocus(new FocusNode());
                     },
                     child: Text('Ok'),
                   )
@@ -82,26 +98,28 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget getDownloadView2() {
-    return Column(
-      children: [
-        Text(controller.nameDownloadCurrentChapter.value),
-        Expanded(
-          child: ListView.builder(
-            addAutomaticKeepAlives: true,
-              itemCount: controller.downloads.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                    onTap: () {},
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(controller.downloads[index].name),
-                        Text(controller.downloads[index].progess)
-                      ],
-                    ));
-              }),
-        ),
-      ],
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(controller.nameDownloadCurrentChapter.value,
+              style: GoogleFonts.robotoMono(
+                  fontSize: 22, fontWeight: FontWeight.bold)),
+          Container(
+            width: Get.width / 2,
+            height: Get.width / 2,
+            child: FlareActor(
+              'material/downloading.flr',
+              fit: BoxFit.contain,
+              animation:'Aura',
+            ),
+          ),
+          Text(controller.namePageCompleted.value,
+              style: GoogleFonts.robotoMono(
+                  fontSize: 18, fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 
@@ -111,11 +129,14 @@ class HomeView extends GetView<HomeController> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
               onTap: () {
-                controller.commandCtr.text = controller.commandCtr.text.trim() +
-                    ' ' +
-                    controller.comics[index].url;
+                controller.xuLyText('comic name "${controller.comics[index].name}"');
               },
-              onLongPress: () {},
+            onLongPress: () {
+              controller.commandCtr.text = controller.commandCtr.text.trim() +
+                  ' "' +
+                  controller.comics[index].name +
+                  '"';
+            },
               title: Row(
                 children: [
                   Image.network(
@@ -155,7 +176,8 @@ class HomeView extends GetView<HomeController> {
               onLongPress: () {
                 controller.commandCtr.text = controller.commandCtr.text.trim() +
                     ' "' +
-                    controller.chapters[index].name+'"';
+                    controller.chapters[index].name +
+                    '"';
               },
               title: Row(
                 children: [Text(controller.chapters[index].name)],
